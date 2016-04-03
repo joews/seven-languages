@@ -41,6 +41,22 @@ Matrix sum := method(
   _list map(sum) sum
 )
 
+// Write the matrix to the JSON file specificed by `path`
+Matrix write := method(path,
+  file := File with(path) remove openForUpdating
+  file write(_list asJson)
+  file close
+)
+
+// Read the matrix from the JSON file specificed by `path`
+Matrix read := method(path,
+  file := File with(path) openForReading
+  json := file contents
+  file close
+
+  Yajl parseJson(json)
+)
+
 // Testing
 m := Matrix clone
 m dim(2, 2, 0)
@@ -50,3 +66,6 @@ m get(0, 0) println
 m get(0, 1) println
 m println
 m sum println
+
+m write("/tmp/io-matrix.json")
+m read("/tmp/io-matrix.json") println

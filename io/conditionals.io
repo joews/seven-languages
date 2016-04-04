@@ -12,12 +12,16 @@ false _ifFalse := method(/* msg, */
   false
 )
 
-// TODO this returns true/false; if() returns the result of evaluating
-//  the consequent branch
 _if := method(/* condition, truePath, falsePath, */
   condition := call evalArgAt(0)
   conditionIsTruthy := (condition isNil or condition == false) not
-  conditionIsTruthy ifTrue(call evalArgAt(1)) ifFalse(call evalArgAt(2))
+  result := nil
+
+  conditionIsTruthy ifTrue(
+    result = (call evalArgAt(1))) ifFalse(
+    result = (call evalArgAt(2)))
+
+  result
 )
 
 // TODO _then, _else, _elseif

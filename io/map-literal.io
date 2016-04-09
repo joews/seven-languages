@@ -29,6 +29,7 @@ atEscapedPut := method(key, value,
   atPut(escapedKey, value)
 )
 
-# TODO is subscript["key"] syntax possible?
+# map[key] => value
+Map squareBrackets := method(key, at(key))
 
-# TODO ["list", "literal"]
+Map

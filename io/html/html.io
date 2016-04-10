@@ -26,7 +26,7 @@ html forward := method(
   tagName := call message name
 
   argValues := call message arguments map(e, 
-    html doMessage(e))
+    self doMessage(e))
 
   if (argValues first proto == Map,
     attrs := argValues removeFirst,

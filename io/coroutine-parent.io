@@ -16,4 +16,4 @@ O := Object clone
 O somethingAsync := method(wait(1); "done!" println)
 
 "some program code here" println
-A @later
+O @somethingAsync

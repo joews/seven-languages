@@ -1,4 +1,6 @@
 # Io notes
+ 
+* IRC: `#io` on freenode. [IRC logs](http://irclogs.shortcircuit.net.au/%23io/latest.log.html)
 
 * Activate add-ons by calling their slot, e.g. `Range`.
 * Activate the `Range` add-on to create ranges from numbers, e.g. `1 to(10)`.

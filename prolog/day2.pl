@@ -29,10 +29,10 @@ ancestor(X, Y) :-
 %  show that, on this machine, Prolog uses 60bit signed integers.
 factorial(0, 1).
 factorial(N, Result) :-
-  N > 0,                           % precondition
+  N > 0,                        % precondition
   N1 is N - 1,                   
   factorial(N1, NextFactorial), % recursively match the next step
-  Result is N * NextFactorial.     % use the next step to compute result
+  Result is N * NextFactorial.  % use the next step to compute result
 
 % properly tail recursive factorial
 % the second parameter is an accumulator
@@ -41,12 +41,25 @@ factorial(N, Result) :-
 
 % Even though this is tail recursive, it overflows!
 % TODO: find out why!
-factorial2(0, F, F).
+factorial2(0, A, A).
 factorial2(N, A, Result) :-
   N > 0,
   A1 is N * A,
   N1 is N - 1,
   factorial2(N1, A1, Result).
 
-% A cleaner api for factorial 2
+% A cleaner api for factorial2
 factorial3(N, Result) :- factorial2(N, 1, Result).
+
+% fibonacci
+% my solution - not tail recursive
+fib(0, 1).
+fib(1, 1).
+fib(N, Result) :-
+  N > 1,
+  N1 is N - 1,
+  N2 is N - 2,
+  fib(N1, Result1),
+  fib(N2, Result2),
+  Result is Result1 + Result2.
+

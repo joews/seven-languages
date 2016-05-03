@@ -15,6 +15,12 @@ friend(X, Y) :-
   likes(X, Z),
   likes(Y, Z).
 
+% Rules are also called clauses. Facts are "unit clauses".
+% Facts are equivalent to rules with the body "true":
+% friend(a, b).  means  friend(a, b) :- true.
+
+% :- can be read as "if", and commas in rule bodies can be read as "and".
+
 % This is a query. Run it in the REPL to get an answer.
 % friend(wallace, gromit).
 

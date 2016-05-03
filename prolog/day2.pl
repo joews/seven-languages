@@ -22,7 +22,7 @@ ancestor(X, Y) :-
 
 
 % factorial
-% not tail-recursive - factorial(999999, W) causes a stack overflow on this machine.
+% not tail-recursive - factorial(999999, W) causes a local stack overflow.
 % factorial(35, W) causes integer overflow.
 % factorial(34, W) is ~2^58.
 % current_prolog_flag(max_integer, Max) and current_prolog_flag(min_integer, Min) 
@@ -39,8 +39,12 @@ factorial(N, Result) :-
 % it should be set to 1 at initial entry, but we can't
 %  add a precondition because it's called recursively
 
-% Even though this is tail recursive, it overflows!
-% TODO: find out why!
+% tail recursion eliminates the "local" stack overflow that factorial hits,
+%  but factorial2(999999, 1, R) aborts with a global stack overflow at 32mb. In contrast
+%  the non-tail-recursive form aborts with a "local" stack overflow at 16mb.
+% TODO: find out why this happens. I don't know where the memory usage
+%  comes from since the call is uses a proper tail call and integers
+%  are fixed size.
 factorial2(0, A, A).
 factorial2(N, A, Result) :-
   N > 0,

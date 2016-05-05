@@ -64,3 +64,26 @@ fib(N, Result) :-
   fib(N2, Result2),
   Result is Result1 + Result2.
 
+% my tail recursive solution
+% with much help from http://computer-programming-forum.com/55-prolog/c84753c04995aea3.htm
+fib2(N, Result) :- 
+  N > 0, 
+  fib2(N, 0, 1, Result).
+
+% tail recursion with two accumulators, which store the last two fibonacci numbers
+% when N reaches 1, the second accumulator will contain the result
+fib2(1, _, A, A).
+fib2(N, F1, F2, Result) :-
+  NextN is N - 1,
+  NextF1 is F2,
+  NextF2 is F1 + F2,
+  fib2(NextN, NextF1, NextF2, Result).
+
+% trace for fib2(5, R):
+% 5, 0, 1, R?
+% 4, 1, 1, R?
+% 3, 1, 2, R?
+% 2, 2, 3, R?
+% 1, 3, 5, R?
+% 1, 3, 5, 5
+% R = 5

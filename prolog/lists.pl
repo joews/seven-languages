@@ -68,3 +68,14 @@ concat(A, B, [a, b, c, d]). % A, B: all split permutations, e.g:
 % A = [a], B = [b,c,d]
 % A = [a,b], B = [c,d]
 % A = [a,b,c], B = [d]
+
+%
+%  Some more list functions
+%
+last([H|[]], H).
+last([H|T], R) :- last(T, R).
+
+at([H|_], 0, H).
+at([H|T], N, R) :-
+  NN is N - 1,
+  at(T, NN, R).

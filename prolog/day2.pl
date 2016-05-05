@@ -35,25 +35,22 @@ factorial(N, Result) :-
   Result is N * NextFactorial.  % use the next step to compute result
 
 % properly tail recursive factorial
-% the second parameter is an accumulator
-% it should be set to 1 at initial entry, but we can't
-%  add a precondition because it's called recursively
+% the second parameter is an accumulator. factorial2/2 is a convenience wrapper
+%  that initialises the accumulator to 1.
 
 % tail recursion eliminates the "local" stack overflow that factorial hits,
 %  but factorial2(999999, 1, R) aborts with a global stack overflow at 32mb. In contrast
 %  the non-tail-recursive form aborts with a "local" stack overflow at 16mb.
-% TODO: find out why this happens. I don't know where the memory usage
-%  comes from since the call is uses a proper tail call and integers
-%  are fixed size.
+% it seems that the gprolog interpreter doesn't support proper tail calls. 
+% the SWI prolog interpreter does, and it seems that compiled gprolog programs
+%  also do - h/t comment on http://stackoverflow.com/a/7863217/2806996
+factorial2(N, Result) :- factorial2(N, 1, Result).
 factorial2(0, A, A).
 factorial2(N, A, Result) :-
-  N > 0,
   A1 is N * A,
   N1 is N - 1,
   factorial2(N1, A1, Result).
 
-% A cleaner api for factorial2
-factorial3(N, Result) :- factorial2(N, 1, Result).
 
 % fibonacci
 % my solution - not tail recursive

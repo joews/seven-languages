@@ -79,3 +79,10 @@ at([H|_], 0, H).
 at([H|T], N, R) :-
   NN is N - 1,
   at(T, NN, R).
+
+% reverse is built-in
+rev([H|[]], [H]).
+rev([H1|[H2|[]]], [H2, H1]).
+rev([H|T], Result) :-
+  rev(T, TRev),
+  concat(TRev, [H], Result).

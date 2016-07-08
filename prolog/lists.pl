@@ -52,7 +52,7 @@ concat2([Head|Tail1], List, [Head|Tail2]):-
 
 % concat/append has superpowers.
 
-% "equal-if-concatenated" test:
+% "equal-if-concatenated" test
 concat([a], [b], [a, b]). % true
 concat([a], [b], [a, b, c]). % no
 
@@ -86,3 +86,16 @@ rev([H1|[H2|[]]], [H2, H1]).
 rev([H|T], Result) :-
   rev(T, TRev),
   concat(TRev, [H], Result).
+
+% min is built-in
+min2([A|[B|[]]], Result) :-
+  A < B,
+  Result = A.
+
+min2([A|[B|[]]]) :-
+  B < A,
+  Result = B.
+
+
+min2([H|T], Result) :-
+

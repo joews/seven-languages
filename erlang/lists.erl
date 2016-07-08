@@ -63,6 +63,11 @@ take(_, 0) -> [];
 take([H|T], N) when N > 0 ->
   [H|take(T, N - 1)].
 
+% TODO not tail recursive
+% TODO implement append
+reverse([]) -> [];
+reverse([H|T]) ->
+  lists:append(reverse(T), [H]).
 
 % test home made list functions
 % TODO find a unit test library
@@ -102,6 +107,11 @@ test() ->
 
   % there isn't a lists:take
   log(take(Input, 4)),
+
+  log([reverse,
+      reverse(Input) == lists:reverse(Input),
+      reverse(Input)
+  ]),
 
   log(tests_done).
 

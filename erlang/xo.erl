@@ -4,52 +4,56 @@
 
 % Expect a single argument containing the board pieces as a string,
 % valid inputs are x (cross), o (nought) or _ (not yet played).
-main([Board|[]]) when length(Board) == 9 ->
-  % log_board(Board),
-
-  % TODO actually use the input parameter! need to convert the string
-  % (actually an array of integers) into an array of atoms.
-  % use this test input for now
-  % use a for "available"
-  B = [x, o, a,
-       o, x, z,
-       x, o, x],
-
-  Result = result(B),
-
-  io:format("The result is~n"),
-  io:format(Result);
+main([BoardStr|[]]) when length(BoardStr) == 9 ->
+  log_board(BoardStr),
+  Board = parse_input(BoardStr),
+  Result = result(Board),
+  io:format("The result is: ~p~n", [Result]);
 
 main(_) ->
   io:format("Usage: escript xo.erl xoxx_o_xo").
 
 % my first instinct was to write this like a prolog program.
-% I think that was not the best approach.
-% TODO try another way.
+% maybe there is a way to reduce the boilerplate,
+%  though I like the raw readability.
+% I guess this would get untenable if we had to validate
+%  that the state of the board is legal, though.
 
 % rows
-result([C|[C|[C|[_|[_|[_|[_|[_|[_]]]]]]]]]) when (C == x) or (C == o) -> C;
-result([_|[_|[_|[C|[C|[C|[_|[_|[_]]]]]]]]]) when (C == x) or (C == o) -> C;
-result([_|[_|[_|[_|[_|[_|[C|[C|[C]]]]]]]]]) when (C == x) or (C == o) -> C;
+result({ C, C, C, _, _, _, _, _ ,_ }) when (C == x) or (C == o) -> C;
+result({ _, _, _, C, C, C, _, _ ,_ }) when (C == x) or (C == o) -> C;
+result({ _, _, _, _, _, _, C, C, C }) when (C == x) or (C == o) -> C;
 
 % cols
-result([C|[_|[_|[C|[_|[_|[C|[_|[_]]]]]]]]]) when (C == x) or (C == o) -> C;
-result([_|[C|[_|[_|[C|[_|[_|[C|[_]]]]]]]]]) when (C == x) or (C == o) -> C;
-result([_|[_|[C|[_|[_|[C|[_|[_|[C]]]]]]]]]) when (C == x) or (C == o) -> C;
+result({ C, _, _, C, _, _, C, _, _ }) when (C == x) or (C == o) -> C;
+result({ _, C, _, _, C, _, _, C, _ }) when (C == x) or (C == o) -> C;
+result({ _, _, C, _, _, C, _, _, C }) when (C == x) or (C == o) -> C;
 
 % diagonals
-result([C|[_|[_|[_|[C|[_|[_|[_|[C]]]]]]]]]) when (C == x) or (C == o) -> C;
-result([_|[_|[C|[_|[C|[_|[C|[_|[_]]]]]]]]]) when (C == x) or (C == o) -> C;
-
+result({ C, _, _, _, C, _, _, _, C }) when (C == x) or (C == o) -> C;
+result({ _, _, C, _, C, _, C, _, _ }) when (C == x) or (C == o) -> C;
 
 result(Board) ->
-  Incomplete = lists:any(fun(C) -> C == a end, Board),
-  Draw = lists:all(fun(C) -> (C == x) or (C == o) end, Board),
+  % I can't define not_piece externally (bad function not_piece),
+  %  but I can define it anonymously here and assign to a variable.
+  % TODO why is this?
+  NotPiece = fun(C) -> not(is_piece(C)) end,
+  Incomplete = lists:any(NotPiece, tuple_to_list(Board)),
   if
-    Draw -> draw;
     Incomplete -> no_winner;
-    true -> invalid_board
+    true -> cat
   end.
+
+is_piece(C) -> (C == x) or (C == o).
+not_piece(C) -> not is_piece(c).
+
+% translate a string to tuple of atoms
+% input : "abcd"
+% output: { a, b, c, d }
+parse_input(Str) ->
+  Chars = re:split(Str, "", [{ return, list }]),
+  Atoms = [list_to_atom(C) || C <- Chars, length(C) > 0],
+  list_to_tuple(Atoms).
 
 % impure: log board a 3x3 char matrix
 log_board(Board) ->

@@ -6,7 +6,7 @@
 %
 % exploring higher-order functions and lists
 %
-main (Args) ->
+main (_) ->
   L = [1, 2, 3, 4, 5],
 
   % The built-in `lists` module has higher-order list functions
@@ -25,9 +25,32 @@ main (Args) ->
   AllPlus1 = fun(List) -> lists:map(Plus1, List) end,
   log(AllPlus1(L)),
 
-  test(),
-  log(done).
+  % list comprehensions
 
+  % Map only
+  TwoN = [trunc(math:pow(2, N)) || N <- L],
+  log(TwoN),
+
+  % Map and filter clauses
+  % List comprehensions have the form:
+  % [Expression || Clause1, Clause2, ..., ClauseN]
+  % Clauses can provide values, e.g. N <- TwoN,
+  %  or filter values, e.g. N > 4.
+  log([N + 1 || N <- TwoN, N > 4, N < 32]),
+
+  % Pattern matching in list comprehensions
+  People = [{ joe, 30 }, { amy, 29 }, { peach, 4}, { plum, 1 }],
+  log([Name || { Name, Age } <- People, Age < 10]),
+
+  % List comprehensions can have several inputs. Erlang yields
+  %  cartesian product pairs to the map expression.
+  In1 = [a, b],
+  In2 = [x, y, z],
+
+  % [{a,x},{a,y},{a,z},{b,x},{b,y},{b,z}]
+  log([{ A, B } || A <- In1, B <- In2 ]),
+
+  test_list_functions().
 
 
 % implementing some list functions
@@ -41,21 +64,21 @@ filter(F, [H|T]) ->
     _    -> filter(F, T)
   end.
 
-any(F, []) -> false;
+any(_, []) -> false;
 any(F, [H|T]) ->
   case F(H) of
     true -> true;
     false -> any(F, T)
   end.
 
-all(F, []) -> false;
+all(_, []) -> false;
 all(F, [H|T]) ->
   case F(H) of
     true -> all(F, T);
     false -> false
   end.
 
-foldl(F, Prev, []) -> Prev;
+foldl(_, Prev, []) -> Prev;
 foldl(F, Prev, [H|T]) ->
   foldl(F, F(H, Prev), T).
 
@@ -71,14 +94,14 @@ reverse([H|T]) ->
 
 % test home made list functions
 % TODO find a unit test library
-test() ->
+test_list_functions() ->
   Input = [1, 1, 2, 3, 5, 8, 13],
 
   Double = fun(N) -> N + N end,
   Small = fun(N) -> N < 6 end,
   Sum = fun(X, Y) -> X + Y end,
 
-  log(testing),
+  io:format("~nTesting list functions:~n"),
 
   log([map,
       map(Double, Input) == lists:map(Double, Input),
@@ -113,7 +136,7 @@ test() ->
       reverse(Input)
   ]),
 
-  log(tests_done).
+  io:format("Done testing list functions~n").
 
 log (Msg) ->
   io:format("~p~n", [Msg]).

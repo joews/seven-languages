@@ -26,15 +26,20 @@
 loop() ->
   receive
     % Receive clauses match a Pid that can receive the reply
-    { Pid, ping } ->
-      Pid ! pong,
+    { Client, ping } ->
+      respond(Client, pong),
       loop();
-    { Pid, Other } ->
-      Pid ! io:format("I don't know [~p]~n", [Other]),
+    { Client, Other } ->
+      respond(Client, unknown),
       loop();
     _ ->
       io:format("Error: No Pid~n")
   end.
+
+respond(ClientPid, Response) ->
+  % artificial latency of 0-1 seconds
+  timer:sleep(trunc(random:uniform() * 1000)),
+  ClientPid ! Response.
 
 % client API
 % To: a reply:loop process

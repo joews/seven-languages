@@ -15,6 +15,9 @@
 % 3> gen_server:call(my_name, test).
 %
 
+% TODO actually do something! like logging messages to a file
+%  and searching logged messages
+
 % used gen_server callbacks
 -export([init/1, terminate/2, handle_call/3, handle_cast/2]).
 
@@ -25,7 +28,7 @@
 -export([start/0, stop/0]).
 
 % client api
--export([crash/0]).
+-export([crash_client/0, crash_server/0]).
 
 %
 % gen_server lifecycle callbacks
@@ -87,8 +90,19 @@ stop() ->
 %
 % client api
 %
-crash() ->
+
+% send a message to the server causing it to crash
+%  (and the supervisor to restart, if running supervised).
+% send this many times in a short space of time to break the
+%  supervisor's restart intensity rules and cause the app to stop.
+crash_server() ->
   cast(crash).
+
+% cause the client process to crash
+% if this is the repl, the process is auto-restarted by `erl`, I think.
+% this doesn't affect the running application.
+crash_client() ->
+  exit(crash_client).
 
 %
 % helpers

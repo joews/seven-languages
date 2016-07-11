@@ -15,6 +15,10 @@
 % 1> application:start(app).
 % 2> application:stop(app).
 %
+% See what applications are loaded and running:
+% 3> application:loaded_applications().
+% 4> application:which_applications().
+%
 
 % start: called by the application start routine, which gets arguments
 %  from the manifest app.app.

@@ -7,6 +7,9 @@
 % Supervises (starts, stops, restarts) server.erl.
 %
 
+% TODO
+% Start several processes with different configuration
+% (e.g. write to differnet files)
 -export([start_link/0, init/1]).
 
 

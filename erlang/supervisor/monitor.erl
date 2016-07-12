@@ -1,10 +1,8 @@
 -module(monitor).
 -export([start/0, loop/0]).
 
-% A toy process supervisor
-% Real apps usually use the OTP supervisor behaviour.
-% Run from main.erl
-
+% A process that can monitor other processes and be notified
+%  if they crash. The first step towards a supervisor.
 start() ->
   io:format("Starting monitor~n"),
   { ok, spawn(fun monitor:loop/0) }.

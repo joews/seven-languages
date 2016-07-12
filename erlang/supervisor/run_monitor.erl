@@ -1,7 +1,7 @@
 -module(run_monitor).
 %
 % Runner for toy monitor examples
-% $ escript main.erl
+% $ escript run_monitor.erl
 %
 
 main(_) ->
